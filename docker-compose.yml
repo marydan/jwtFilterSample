@@ -1,0 +1,42 @@
+version: '3'
+services:
+  mysql:
+    image: mysql:latest
+    network_mode: host
+    container_name: mysqlmycontnew
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_MY_URL: jdbc:mysql://localhost:3306/demodb?createDatabaseIfNotExist=true&user=root&password=password
+
+  foodapp:
+    image: maryrani/ustfoodapp1:latest
+    network_mode: host
+    container_name: foodappcont1
+    restart: always
+    depends_on:
+      - mysql
+    ports:
+      - 9092:9092
+    healthcheck:
+      test: 'exit 0'
+
+  mongo:
+    image: mongo:latest
+    network_mode: host
+    container_name: mymongocont
+    environment:
+      MONGO_DB_URL: mongodb://localhost:27017/customerdb
+    ports:
+      - 27017:27017
+      
+  mymongoapp:
+    image: maryrani/ustmongoimage1
+    network_mode: host
+    restart: always
+    depends_on:
+      - mongo
+    ports:
+      - 9093:9093
+      
